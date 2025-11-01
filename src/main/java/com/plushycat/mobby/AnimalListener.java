@@ -82,6 +82,12 @@ public class AnimalListener implements Listener
                 location.getWorld().spawnParticle(Particle.HEART, location, 20);
                 ((Breedable) entity).setAgeLock(true);
 
+                // track for the player
+                String custom = entity.getCustomName();
+                String typeName = entity.getType().name();
+                String display = (custom != null && !custom.isEmpty()) ? custom : prettify(typeName);
+                plugin.registerMini(player.getUniqueId(), entity.getUniqueId(), display, typeName, location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
+
                 // reduce stack (or clear if consumed entirely)
                 if (available > toConsume) {
                     main.setAmount(available - toConsume);
@@ -112,6 +118,12 @@ public class AnimalListener implements Listener
                 location.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, location, 20);
                 ((Breedable) entity).setAgeLock(false);
 
+                // track freeing for the player
+                String custom2 = entity.getCustomName();
+                String typeName2 = entity.getType().name();
+                String display2 = (custom2 != null && !custom2.isEmpty()) ? custom2 : prettify(typeName2);
+                plugin.registerFree(player.getUniqueId(), entity.getUniqueId(), display2, typeName2, location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
+
                 if (available > toConsume) {
                     main.setAmount(available - toConsume);
                     inventory.setItemInMainHand(main);
@@ -126,5 +138,12 @@ public class AnimalListener implements Listener
                 event.setCancelled(true);
             }
         }
+    }
+
+    private String prettify(String enumName) {
+        if (enumName == null) return "";
+        String lower = enumName.toLowerCase().replace('_', ' ');
+        if (lower.isEmpty()) return "";
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 }

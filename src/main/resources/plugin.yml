@@ -20,9 +20,11 @@ permissions:
   mobby.reload:
     description: Allow reloading the plugin configuration.
     default: op
+  mobby.list:
+    description: Allow listing tracked mobs
+    default: op
 
 commands:
   mobby:
-    description: "Main command for Mobby (usage: /mobby reload)"
-    usage: "/mobby reload"
-    permission: mobby.reload
+    description: "Main command for Mobby (usage: /mobby <reload / list>)"
+    usage: "/mobby <reload / list>"

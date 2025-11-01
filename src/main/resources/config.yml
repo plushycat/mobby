@@ -7,3 +7,6 @@ items:
     before: HONEY_BOTTLE
     after: GLASS_BOTTLE
     amount: 1
+
+tracking:
+  update-interval-seconds: 60

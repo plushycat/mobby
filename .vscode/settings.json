@@ -3,5 +3,6 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "cSpell.words": [
         "mobby"
-    ]
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
 }
