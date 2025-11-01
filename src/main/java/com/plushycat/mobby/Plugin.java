@@ -1,4 +1,4 @@
-package net.leminaw.kittenforever;
+package com.plushycat.mobby;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;

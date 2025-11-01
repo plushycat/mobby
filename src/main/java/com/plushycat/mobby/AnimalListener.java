@@ -1,4 +1,4 @@
-package net.leminaw.kittenforever;
+package com.plushycat.mobby;
 
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Breedable;
@@ -51,7 +51,7 @@ public class AnimalListener implements Listener
         if (!entity.isAdult())
         {
             if (
-                player.hasPermission("kittenforever.growth.stop")
+                player.hasPermission("mobby.growth.stop")
                 && inventory.getItemInMainHand().getType().equals(stopGrowthItem)
                 && !((Breedable) entity).getAgeLock()
             ) {
@@ -62,11 +62,11 @@ public class AnimalListener implements Listener
             }
 
             else if (
-                player.hasPermission("kittenforever.growth.resume")
+                player.hasPermission("mobby.growth.resume")
                 && inventory.getItemInMainHand().getType().equals(resumeGrowthItem)
                 && ((Breedable) entity).getAgeLock()
             ) {
-                location.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, location, 20);
+                location.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, location, 20);
                 ((Breedable) entity).setAgeLock(false);
                 inventory.setItemInMainHand(new ItemStack(resumeGrowthItemAfter));
                 event.setCancelled(true);

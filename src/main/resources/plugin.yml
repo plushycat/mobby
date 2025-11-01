@@ -1,18 +1,18 @@
-main: net.leminaw.kittenforever.Plugin
-name: KittenForever
+main: com.plushycat.mobby.Plugin
+name: Mobby
 version: 1.0.0
-author: LeMinaw
-api-version: 1.17
+author: plushycat, LeMinaw
+api-version: 1.20
 description: Lightweight plugin to control the growth of some animals.
 
 permissions:
-  kittenforever.growth.*:
+  mobby.growth.*:
     description: Control all aspects of animal growth.
     default: op
     children:
-      kittenforever.growth.stop: true
-      kittenforever.growth.resume: true
-  kittenforever.growth.stop:
+      mobby.growth.stop: true
+      mobby.growth.resume: true
+  mobby.growth.stop:
     description: Allow stopping animal growth.
-  kittenforever.growth.resume:
+  mobby.growth.resume:
     description: Allow resuming animal growth.
