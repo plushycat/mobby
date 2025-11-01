@@ -2,24 +2,46 @@ package com.plushycat.mobby;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.HandlerList;
 
 public class Plugin extends JavaPlugin
 {
-    FileConfiguration config = getConfig();
+    FileConfiguration config;
+
+    private AnimalListener animalListener;
 
     @Override
     public void onEnable()
     {
-        config.addDefault("items.stopGrowth.before", "MILK_BUCKET");
-        config.addDefault("items.stopGrowth.after", "BUCKET");
-        config.addDefault("items.resumeGrowth.before", "MUSHROOM_STEW");
-        config.addDefault("items.resumeGrowth.after", "BOWL");
-        config.options().copyDefaults(true);
-        saveConfig();
-        
-        getServer().getPluginManager().registerEvents(new AnimalListener(this), this);
+        // Save packaged default config to the plugin data folder if missing
+        saveDefaultConfig();
+        config = getConfig();
+
+        animalListener = new AnimalListener(this);
+        getServer().getPluginManager().registerEvents(animalListener, this);
+
+        // register the reload command executor
+        if (getCommand("mobby") != null) {
+            getCommand("mobby").setExecutor(new ReloadCommand(this));
+        }
     }
 
     @Override
     public void onDisable() {}
+
+    /**
+     * Reloads the plugin configuration and reinitializes the listener.
+     */
+    public void reloadPlugin()
+    {
+        reloadConfig();
+        config = getConfig();
+
+        if (animalListener != null) {
+            HandlerList.unregisterAll(animalListener);
+        }
+
+        animalListener = new AnimalListener(this);
+        getServer().getPluginManager().registerEvents(animalListener, this);
+    }
 }

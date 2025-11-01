@@ -16,3 +16,13 @@ permissions:
     description: Allow stopping animal growth.
   mobby.growth.resume:
     description: Allow resuming animal growth.
+
+  mobby.reload:
+    description: Allow reloading the plugin configuration.
+    default: op
+
+commands:
+  mobby:
+    description: "Main command for Mobby (usage: /mobby reload)"
+    usage: "/mobby reload"
+    permission: mobby.reload

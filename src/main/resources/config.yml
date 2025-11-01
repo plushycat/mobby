@@ -1,0 +1,7 @@
+items:
+  stopGrowth:
+    before: AMETHYST_SHARD
+    after: AIR
+  resumeGrowth:
+    before: HONEY_BOTTLE
+    after: GLASS_BOTTLE
