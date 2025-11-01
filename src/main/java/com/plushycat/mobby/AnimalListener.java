@@ -19,8 +19,10 @@ public class AnimalListener implements Listener
 
     private Material stopGrowthItem;
     private Material stopGrowthItemAfter;
+    private int stopGrowthAmount;
     private Material resumeGrowthItem;
     private Material resumeGrowthItemAfter;
+    private int resumeGrowthAmount;
 
     public AnimalListener(Plugin plugin)
     {
@@ -28,13 +30,27 @@ public class AnimalListener implements Listener
 
         stopGrowthItem = getMaterialFromConfig("items.stopGrowth.before");
         stopGrowthItemAfter = getMaterialFromConfig("items.stopGrowth.after");
+        stopGrowthAmount = plugin.config.getInt("items.stopGrowth.amount", 1);
         resumeGrowthItem = getMaterialFromConfig("items.resumeGrowth.before");
         resumeGrowthItemAfter = getMaterialFromConfig("items.resumeGrowth.after");
+        resumeGrowthAmount = plugin.config.getInt("items.resumeGrowth.amount", 1);
     }
 
     private Material getMaterialFromConfig(String node)
     {
-        return Material.matchMaterial(plugin.config.getString(node));
+        String name = plugin.config.getString(node);
+        if (name == null) return null;
+        return Material.matchMaterial(name);
+    }
+
+    public void reloadConfigValues()
+    {
+        stopGrowthItem = getMaterialFromConfig("items.stopGrowth.before");
+        stopGrowthItemAfter = getMaterialFromConfig("items.stopGrowth.after");
+        stopGrowthAmount = plugin.config.getInt("items.stopGrowth.amount", 1);
+        resumeGrowthItem = getMaterialFromConfig("items.resumeGrowth.before");
+        resumeGrowthItemAfter = getMaterialFromConfig("items.resumeGrowth.after");
+        resumeGrowthAmount = plugin.config.getInt("items.resumeGrowth.amount", 1);
     }
 
     @EventHandler
@@ -52,23 +68,61 @@ public class AnimalListener implements Listener
         {
             if (
                 player.hasPermission("mobby.growth.stop")
-                && inventory.getItemInMainHand().getType().equals(stopGrowthItem)
+                && inventory.getItemInMainHand() != null
+                && inventory.getItemInMainHand().getType() == stopGrowthItem
                 && !((Breedable) entity).getAgeLock()
             ) {
+                // consume configured amount from the stack and give the 'after' item(s)
+                ItemStack main = inventory.getItemInMainHand();
+                int available = main.getAmount();
+                int toConsume = Math.min(stopGrowthAmount, Math.max(0, available));
+                if (toConsume <= 0) return;
+
+                // apply effect
                 location.getWorld().spawnParticle(Particle.HEART, location, 20);
                 ((Breedable) entity).setAgeLock(true);
-                inventory.setItemInMainHand(new ItemStack(stopGrowthItemAfter));
+
+                // reduce stack (or clear if consumed entirely)
+                if (available > toConsume) {
+                    main.setAmount(available - toConsume);
+                    inventory.setItemInMainHand(main);
+                } else {
+                    inventory.setItemInMainHand(new ItemStack(Material.AIR));
+                }
+
+                // give after items if applicable
+                if (stopGrowthItemAfter != null && stopGrowthItemAfter != Material.AIR) {
+                    inventory.addItem(new ItemStack(stopGrowthItemAfter, toConsume));
+                }
+
                 event.setCancelled(true);
             }
 
             else if (
                 player.hasPermission("mobby.growth.resume")
-                && inventory.getItemInMainHand().getType().equals(resumeGrowthItem)
+                && inventory.getItemInMainHand() != null
+                && inventory.getItemInMainHand().getType() == resumeGrowthItem
                 && ((Breedable) entity).getAgeLock()
             ) {
+                ItemStack main = inventory.getItemInMainHand();
+                int available = main.getAmount();
+                int toConsume = Math.min(resumeGrowthAmount, Math.max(0, available));
+                if (toConsume <= 0) return;
+
                 location.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, location, 20);
                 ((Breedable) entity).setAgeLock(false);
-                inventory.setItemInMainHand(new ItemStack(resumeGrowthItemAfter));
+
+                if (available > toConsume) {
+                    main.setAmount(available - toConsume);
+                    inventory.setItemInMainHand(main);
+                } else {
+                    inventory.setItemInMainHand(new ItemStack(Material.AIR));
+                }
+
+                if (resumeGrowthItemAfter != null && resumeGrowthItemAfter != Material.AIR) {
+                    inventory.addItem(new ItemStack(resumeGrowthItemAfter, toConsume));
+                }
+
                 event.setCancelled(true);
             }
         }

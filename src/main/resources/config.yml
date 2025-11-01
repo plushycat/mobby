@@ -2,6 +2,8 @@ items:
   stopGrowth:
     before: AMETHYST_SHARD
     after: AIR
+    amount: 1
   resumeGrowth:
     before: HONEY_BOTTLE
     after: GLASS_BOTTLE
+    amount: 1

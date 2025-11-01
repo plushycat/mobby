@@ -4,16 +4,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 
-public class Plugin extends JavaPlugin
-{
+public class Plugin extends JavaPlugin {
     FileConfiguration config;
 
     private AnimalListener animalListener;
 
     @Override
-    public void onEnable()
-    {
-        // Save packaged default config to the plugin data folder if missing
+    public void onEnable() {
+        // Copy packaged default config.yml to the plugin folder if it's missing.
         saveDefaultConfig();
         config = getConfig();
 
@@ -27,13 +25,13 @@ public class Plugin extends JavaPlugin
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+    }
 
     /**
      * Reloads the plugin configuration and reinitializes the listener.
      */
-    public void reloadPlugin()
-    {
+    public void reloadPlugin() {
         reloadConfig();
         config = getConfig();
 
